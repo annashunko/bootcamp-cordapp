@@ -1,6 +1,7 @@
 package java_bootcamp;
 
 import co.paralleluniverse.fibers.Suspendable;
+import com.google.common.collect.ImmutableList;
 import net.corda.core.flows.*;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
@@ -39,13 +40,18 @@ public class TokenIssueFlow extends FlowLogic<SignedTransaction> {
          *         TODO 1 - Create our TokenState to represent on-ledger tokens!
          * ===========================================================================*/
         // We create our new TokenState.
-        TokenState tokenState = null;
+        TokenState tokenState = new TokenState(issuer, owner, amount);
 
         /* ============================================================================
          *      TODO 3 - Build our token issuance transaction to update the ledger!
          * ===========================================================================*/
         // We build our transaction.
-        TransactionBuilder transactionBuilder = null;
+        TransactionBuilder transactionBuilder = new TransactionBuilder();
+        transactionBuilder
+                .setNotary(notary);
+        transactionBuilder
+                .addCommand(new TokenContract.Commands.Issue(), issuer.getOwningKey())
+                .addOutputState(tokenState, "java_bootcamp.TokenContract");
 
         /* ============================================================================
          *          TODO 2 - Write our TokenContract to control token issuance!
@@ -58,5 +64,6 @@ public class TokenIssueFlow extends FlowLogic<SignedTransaction> {
 
         // We get the transaction notarised and recorded automatically by the platform.
         return subFlow(new FinalityFlow(signedTransaction));
+//        return subFlow(new FinalityFlow(signedTransaction, initiateFlow(owner)));
     }
 }

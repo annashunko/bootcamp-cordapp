@@ -177,3 +177,18 @@ Once you've finished the CorDapp's code, run it with the following steps:
   `distributionUrl=gradle-4.4.1-all.zip`)
 * In `build.gradle`, under both `repositories` blocks, comment out any 
   repositories other than `flatDir { ... }`
+
+
+## Idea config
+
+Add to `.idea/config.xml`
+```
+<component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
+  </component>
+```
+And then rebuild project
+
+
+To run FlowTests add VM option
+`-javaagent:lib/quasar.jar`
